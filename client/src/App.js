@@ -6,7 +6,6 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import CreateGig from "./pages/CreateGig";
 import RequireFreelancer from "./components/RequireFreelancer";
-import Home from "./pages/Home";
 import GigDetail from "./pages/GigDetail";
 import Dashboard from "./pages/Dashboard";
 import Success from "./pages/Success";
@@ -29,7 +28,6 @@ function App() {
             </RequireFreelancer>
           }
         />
-        <Route path="/" element={<Home />} />
         <Route path="/gigs/:id" element={<GigDetail />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/success" element={<Success />} />

@@ -10,11 +10,18 @@ exports.register = async (req, res) => {
   console.log("📥 Registering:", { username, email, role });
 
   try {
-    const existing = await User.findOne({ email });
-    if (existing) {
-      console.log("❌ Email already exists");
-      return res.status(400).json({ message: "Email already in use" });
-    }
+    // Check for duplicate email or username
+const existingEmail = await User.findOne({ email });
+if (existingEmail) {
+  console.log("❌ Email already exists");
+  return res.status(400).json({ message: "Email already in use" });
+}
+
+const existingUsername = await User.findOne({ username });
+if (existingUsername) {
+  console.log("❌ Username already exists");
+  return res.status(400).json({ message: "Username already in use" });
+}
 
     const hashedPassword = await bcrypt.hash(password, 10);
 

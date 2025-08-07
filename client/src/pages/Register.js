@@ -54,7 +54,7 @@ const Register = () => {
       const res = await API.post("/api/auth/register", data);
       localStorage.setItem("token", res.data.token);
       toast.success("Welcome to NovaBridge! Please verify your email.");
-      navigate("/dashboard");
+      navigate("/login");
     } catch (err) {
       toast.error(err.response?.data?.message || "Registration failed");
     }

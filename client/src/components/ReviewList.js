@@ -9,9 +9,11 @@ const ReviewList = ({ gigId }) => {
     const fetchReviews = async () => {
       try {
         const res = await axios.get(`/api/reviews/${gigId}`);
-        setReviews(res.data);
+        const reviewData = Array.isArray(res.data) ? res.data : res.data.reviews || [];
+        setReviews(reviewData);
       } catch (err) {
         console.error("Failed to load reviews:", err.response?.data || err);
+        setReviews([]); // fallback to empty array to prevent map crash
       }
     };
 

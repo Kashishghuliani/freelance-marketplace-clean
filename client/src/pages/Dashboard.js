@@ -86,30 +86,33 @@ const Dashboard = () => {
   };
 
   const handleUpdateOrderStatus = async (orderId, status) => {
-    if (
-      !window.confirm(`Are you sure you want to mark this order as ${status}?`)
-    )
-      return;
-    try {
-      const token = localStorage.getItem("token");
-      let apiStatus = status;
-      if (status === "Rejected") apiStatus = "Cancelled";
+  if (!window.confirm(`Are you sure you want to mark this order as ${status}?`))
+    return;
 
-      await API.put(`/orders/${apiStatus.toLowerCase()}/${orderId}`, null, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+  try {
+    const token = localStorage.getItem("token");
 
-      setOrders((prev) =>
-        prev.map((order) =>
-          order._id === orderId ? { ...order, status: apiStatus } : order
-        )
-      );
-      alert(`Order marked as ${apiStatus}.`);
-    } catch (err) {
-      console.error("❌ Update order error:", err);
-      alert("Failed to update order.");
-    }
-  };
+    // Map status to backend route
+    let route = "";
+    if (status === "Completed") route = "complete";
+    else if (status === "Rejected") route = "cancel"; // Rejected → Cancel in backend
+
+    await API.put(`/orders/${route}/${orderId}`, null, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    setOrders((prev) =>
+      prev.map((order) =>
+        order._id === orderId ? { ...order, status } : order
+      )
+    );
+    alert(`Order marked as ${status}.`);
+  } catch (err) {
+    console.error("❌ Update order error:", err);
+    alert("Failed to update order.");
+  }
+};
+
 
   const handleDeleteGig = async (gigId) => {
     if (!window.confirm("Are you sure you want to delete this gig?")) return;

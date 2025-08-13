@@ -10,22 +10,22 @@ const Review = require("../models/Review");
 
 const router = express.Router();
 
-// ✅ Create a review
+// ✅ 1. Create a review (POST) — must be above param routes
 router.post("/", verifyToken, createReview);
 
-// ✅ Get all reviews for a gig
-router.get("/:gigId", getGigReviews);
-
-// ✅ Check if user has reviewed a gig
+// ✅ 2. Check if user has reviewed a gig
 router.get("/check/:gigId", verifyToken, hasUserReviewedGig);
 
-// ✅ NEW: Get all reviews by logged-in user (for dashboard)
+// ✅ 3. Get all reviews for a specific gig
+router.get("/:gigId", getGigReviews);
+
+// ✅ 4. Get all reviews by logged-in user (for dashboard)
 router.get("/", verifyToken, async (req, res) => {
   try {
-    const reviews = await Review.find({ userId: req.userId });
+    const reviews = await Review.find({ userId: req.user.id }); // ensure matches verifyToken
     res.status(200).json(reviews);
   } catch (err) {
-    res.status(500).json(err.message);
+    res.status(500).json({ message: err.message });
   }
 });
 

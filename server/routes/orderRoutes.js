@@ -19,7 +19,7 @@ router.post("/create-checkout-session", verifyToken, createStripeSession);
 router.get("/", verifyToken, getOrders);
 // In orderRoutes.js
 router.put("/cancel/:id", verifyToken, cancelOrder);
-router.put("/complete/:id", verifyToken, completeOrder);
+router.put("/completed/:id", verifyToken, completeOrder);
 
 
 

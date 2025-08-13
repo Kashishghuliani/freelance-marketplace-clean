@@ -28,7 +28,7 @@ const Login = () => {
 
   const onSubmit = async (data) => {
     try {
-      const res = await API.post("/api/auth/login", data);
+      const res = await API.post("/auth/login", data);
       localStorage.setItem("token", res.data.token);
       toast.success("Login successful!");
       navigate("/dashboard");

@@ -51,7 +51,7 @@ const Register = () => {
 
   const onSubmit = async (data) => {
     try {
-      const res = await API.post("/api/auth/register", data);
+      const res = await API.post("/auth/register", data);
       localStorage.setItem("token", res.data.token);
       toast.success("Welcome to NovaBridge! Please verify your email.");
       navigate("/login");

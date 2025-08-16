@@ -31,9 +31,11 @@ const ChatPage = () => {
 
   const fetchConversationId = async () => {
     try {
-      const res = await API.get(`/messages/conversations/${userId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await axios.get(
+  `${process.env.REACT_APP_API_URL}/messages/conversation/${otherUserId}`,
+  { headers: { Authorization: `Bearer ${token}` } }
+);
+
       const convId = res.data?.conversationId;
       setConversationId(convId);
       return convId;

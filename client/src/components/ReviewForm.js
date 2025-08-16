@@ -14,26 +14,39 @@ const ReviewForm = ({ gigId, orderId }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+
+    // 🔍 Debug logs
+    console.log("API_URL:", API_URL);
+    console.log("Submitting Review Payload:", { gigId, orderId, desc, star });
+
+    if (!gigId || !orderId) {
+      alert("❌ gigId or orderId is missing! Check component props.");
+      setLoading(false);
+      return;
+    }
+
     try {
       const token = localStorage.getItem("token");
+      if (!token) {
+        alert("❌ No auth token found in localStorage.");
+        setLoading(false);
+        return;
+      }
 
       await axios.post(
--  `${API_URL}/reviews/${gigId}`,
-+  `${API_URL}/reviews`,
-  { gigId, desc, star, orderId },   // ✅ send gigId inside the body
-  {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  }
-);
-
+        `${API_URL}/reviews`,
+        { gigId, desc, star, orderId }, // ✅ sending gigId inside body
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
       setSubmitted(true);
       setDesc("");
       setStar(0);
       setHover(0);
     } catch (err) {
+      console.error("Review Submit Error:", err.response || err);
       alert(err.response?.data?.message || "Error submitting review");
     } finally {
       setLoading(false);

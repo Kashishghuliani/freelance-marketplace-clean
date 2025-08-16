@@ -10,13 +10,25 @@ export const SocketProvider = ({ children }) => {
     const token = localStorage.getItem("token");
     if (!token) return;
 
-    const payload = JSON.parse(atob(token.split(".")[1]));
-    const newSocket = io("http://localhost:5000");
+    try {
+      const payload = JSON.parse(atob(token.split(".")[1]));
 
-    newSocket.emit("join", payload.id);
-    setSocket(newSocket);
+      // Use env variable, fallback to localhost for dev
+      const SOCKET_URL =
+        process.env.REACT_APP_SOCKET_URL || "http://localhost:5000";
 
-    return () => newSocket.disconnect();
+      const newSocket = io(SOCKET_URL, {
+        auth: { token }, // send token for auth if backend expects it
+        transports: ["websocket"], // force websocket for stability
+      });
+
+      newSocket.emit("join", payload.id);
+      setSocket(newSocket);
+
+      return () => newSocket.disconnect();
+    } catch (err) {
+      console.error("❌ Socket init error:", err);
+    }
   }, []);
 
   return (

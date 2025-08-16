@@ -59,7 +59,7 @@ exports.hasUserReviewedGig = async (req, res) => {
   try {
     const review = await Review.findOne({
       gigId: req.params.gigId,
-      userId: req.userId,
+      userId: req.user.id,
     });
 
     res.status(200).json({ reviewed: !!review });

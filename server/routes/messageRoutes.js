@@ -92,25 +92,29 @@ router.get("/conversation/:conversationId", verifyToken, getMessagesByConversati
  * ✅ Get conversation ID
  * GET /api/messages/conversations/:userId
  */
+// ✅ Get or create conversation by userId
 router.get("/conversations/:userId", verifyToken, async (req, res) => {
   try {
     const currentUserId = req.user.id;
     const otherUserId = req.params.userId;
 
-    const conversation = await Conversation.findOne({
+    let conversation = await Conversation.findOne({
       members: { $all: [currentUserId, otherUserId] },
     });
 
+    // ✅ Auto-create if not found
     if (!conversation) {
-      return res.status(404).json({ message: "Conversation not found" });
+      conversation = new Conversation({ members: [currentUserId, otherUserId] });
+      await conversation.save();
     }
 
     res.status(200).json({ conversationId: conversation._id });
   } catch (err) {
     console.error("❌ Fetch conversation error:", err);
-    res.status(500).json({ message: "Failed to fetch conversation" });
+    res.status(500).json({ message: "Failed to fetch or create conversation" });
   }
 });
+
 
 /**
  * ✅ Mark all messages from a user as read

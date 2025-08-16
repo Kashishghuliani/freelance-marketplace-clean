@@ -18,14 +18,16 @@ const ReviewForm = ({ gigId, orderId }) => {
       const token = localStorage.getItem("token");
 
       await axios.post(
-        `${API_URL}/reviews/${gigId}`, // ✅ safer, if backend expects gigId
-        { desc, star, orderId },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+-  `${API_URL}/reviews/${gigId}`,
++  `${API_URL}/reviews`,
+  { gigId, desc, star, orderId },   // ✅ send gigId inside the body
+  {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+);
+
 
       setSubmitted(true);
       setDesc("");

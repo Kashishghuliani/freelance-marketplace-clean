@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { FaStar } from "react-icons/fa"; // Make sure to install react-icons
+import { FaStar } from "react-icons/fa";
+
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000/api";
 
 const ReviewForm = ({ gigId, orderId }) => {
   const [desc, setDesc] = useState("");
-  const [star, setStar] = useState(5);
+  const [star, setStar] = useState(0);
   const [hover, setHover] = useState(0);
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -14,19 +16,20 @@ const ReviewForm = ({ gigId, orderId }) => {
     setLoading(true);
     try {
       const token = localStorage.getItem("token");
-await axios.post(
-  "/api/reviews",
-  { gigId, desc, star, orderId },
-  {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  }
-);
+
+      await axios.post(
+        `${API_URL}/reviews/${gigId}`, // ✅ safer, if backend expects gigId
+        { desc, star, orderId },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       setSubmitted(true);
       setDesc("");
-      setStar(5);
+      setStar(0);
       setHover(0);
     } catch (err) {
       alert(err.response?.data?.message || "Error submitting review");

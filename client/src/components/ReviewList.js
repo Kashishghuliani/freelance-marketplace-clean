@@ -4,12 +4,15 @@ import { FaStar } from "react-icons/fa";
 
 const ReviewList = ({ gigId }) => {
   const [reviews, setReviews] = useState([]);
+  const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000/api";
 
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        const res = await axios.get(`/api/reviews/${gigId}`);
-        const reviewData = Array.isArray(res.data) ? res.data : res.data.reviews || [];
+        const res = await axios.get(`${API_URL}/reviews/${gigId}`);
+        const reviewData = Array.isArray(res.data)
+          ? res.data
+          : res.data.reviews || [];
         setReviews(reviewData);
       } catch (err) {
         console.error("Failed to load reviews:", err.response?.data || err);
@@ -18,7 +21,7 @@ const ReviewList = ({ gigId }) => {
     };
 
     fetchReviews();
-  }, [gigId]);
+  }, [gigId, API_URL]);
 
   return (
     <div className="max-w-2xl mx-auto my-6 p-4 bg-gray-50 rounded-lg shadow">

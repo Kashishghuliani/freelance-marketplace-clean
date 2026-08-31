@@ -13,6 +13,7 @@ const Success = () => {
   useEffect(() => {
     const createOrder = async () => {
       const token = localStorage.getItem("token");
+
       if (!token || !gigId || !sessionId) {
         setStatus("Invalid session or not logged in.");
         return;
@@ -22,21 +23,13 @@ const Success = () => {
         const gigRes = await API.get(`/gigs/${gigId}`);
         const gig = gigRes.data;
 
-        // Decode token to extract buyerId from payload (not sent to backend!)
-        const payload = JSON.parse(atob(token.split(".")[1]));
-        const buyerId = payload.id;
-
         const orderPayload = {
           sellerId: gig.sellerId._id,
           gigId,
           price: gig.price,
-          // 👇 NOT required if backend pulls from token
-          // buyerId,
         };
 
-        // 👇 FIX this line
-const res = await API.post("/orders/create", orderPayload, {
-
+        const res = await API.post("/orders/create", orderPayload, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -45,9 +38,14 @@ const res = await API.post("/orders/create", orderPayload, {
         console.log("✅ Order created:", res.data);
 
         setStatus("✅ Order created successfully! Redirecting...");
+
         setTimeout(() => navigate("/dashboard"), 2000);
       } catch (err) {
-        console.error("❌ Error creating order:", err.response?.data || err.message || err);
+        console.error(
+          "❌ Error creating order:",
+          err.response?.data || err.message || err
+        );
+
         setStatus("❌ Failed to create order. Please try again.");
       }
     };
@@ -57,8 +55,12 @@ const res = await API.post("/orders/create", orderPayload, {
 
   return (
     <div className="text-center mt-10">
-      <h1 className="text-3xl font-bold text-green-600">Payment Successful 🎉</h1>
+      <h1 className="text-3xl font-bold text-green-600">
+        Payment Successful 🎉
+      </h1>
+
       <p className="mt-4 text-lg">{status}</p>
+
       <button
         onClick={() => navigate("/dashboard")}
         className="mt-6 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"

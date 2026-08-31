@@ -36,7 +36,7 @@ const ChatPage = () => {
   { headers: { Authorization: `Bearer ${token}` } }
 );
 
-      const convId = res.data?.conversationId;
+      const convId = response.data?.conversationId;
       setConversationId(convId);
       return convId;
     } catch (err) {

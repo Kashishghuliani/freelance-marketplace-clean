@@ -31,19 +31,22 @@ const ChatPage = () => {
 
   const fetchConversationId = async () => {
     try {
-      const response = await axios.get(
-  `${process.env.REACT_APP_API_URL}/messages/conversation/${otherUserId}`,
-  { headers: { Authorization: `Bearer ${token}` } }
-);
+      const response = await API.get(
+        `/messages/conversation/${userId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
-      const convId = response.data?.conversationId;
-      setConversationId(convId);
-      return convId;
-    } catch (err) {
-      console.error("Error fetching conversation ID:", err);
-      return null;
-    }
-  };
+    const convId = response.data?.conversationId;
+    setConversationId(convId);
+    return convId;
+  } 
+  catch (err) {
+    console.error("Error fetching conversation ID:", err);
+    return null;
+  }
+};
 
   const fetchMessages = async (convId) => {
     try {
